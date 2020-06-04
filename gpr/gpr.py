@@ -8,6 +8,27 @@ import pandas as pd
 
 
 def estimate_metals_gpr(data,regr_file,ss_cuts_file,regr_type):
+    '''
+        This predicts the average metallicity, [M/H], for stars in two temperature regimes;
+        regr_type 'K' (3500 < T < 5280 K) and regr_type 'M' (2850 < T < 3500 K).
+        
+        Parameters
+        ----------
+        data (Pandas Dataframe): data in the form of a Pandas Dataframe. The columns in this dataframe must match
+                                 the column names from the cross match by Medan, Lepine and Hartman (2020).
+        regr_file (str): The file name that stores the sklearn Gaussian Process Regressor for a particular
+                          temperature regime
+        ss_cuts_file (str): The file name single star cuts used to indentify possible unresolved binaries in a dataset
+                            that would have innacurate metallicity estimates
+        regr_type (str): Specifying which temperature regime this regressor covers, where regr_type 'K' (3500 < T < 5280 K)
+                         and regr_type 'M' (2850 < T < 3500 K)
+        Returns
+        -------
+        M_H (numpy array): Estimate metallicities from Gaussian Process Regressor. All entries with 99.0 either have estimated
+                           values outside the bounds or did not pass single star cuts.
+        M_H_std (numpy array): Estimate confidence on metallicities from Gaussian Process Regressor. All entries with 99.0
+                                either have estimated values outside the bounds or did not pass single star cuts.
+    '''
     regr = joblib.load(regr_file)
     if regr_type=='M':
         #create the colors and absolute magntiudes needed for the regression and single star cuts
