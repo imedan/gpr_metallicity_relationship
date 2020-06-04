@@ -8,4 +8,4 @@ and the 2850 < T < 3500 K sample resulted in a 1-sigma scatter of 0.19 dex from 
 
 ![](M_regression_results.png)
 
-This reprository will provide the resuting Gaussian Process Regressors, along with example code to estimate metallicities and errors on these estimates, using both regressors. It should be noted that systemtic errors are present in the results from the 2850 < T < 3500 K (see Medan, Lepine and Hartman 2020), and this relationship should be used with such issues in mind.
+This reprository will provide the resuting Gaussian Process Regressors, along with example code to estimate metallicities and errors on these estimates using both regressors. It should be noted that systemtic errors are present in the results from the 2850 < T < 3500 K (see Medan, Lepine and Hartman 2020), and this relationship should be used with such issues in mind.
