@@ -32,41 +32,38 @@ def estimate_metals_gpr(data,regr_file,ss_cuts_file,regr_type):
     regr = joblib.load(regr_file)
     if regr_type=='M':
         #create the colors and absolute magntiudes needed for the regression and single star cuts
-        data['M_g']=data['gmag_PS1']+5*np.log10(1e-3*data['PLX_GaiaDR2'])+5
-        data['M_H_2MASS']=data['Hmag_2MASS']+5*np.log10(1e-3*data['PLX_GaiaDR2'])+5
-        data['M_W1']=data['W1mag_AllWISE']+5*np.log10(1e-3*data['PLX_GaiaDR2'])+5
-        data['g-y']=data['gmag_PS1']-data['ymag_PS1']
-        data['g-W2']=data['gmag_PS1']-data['W2mag_AllWISE']
-        data['r-W2']=data['rmag_PS1']-data['W2mag_AllWISE']
-        data['r-W1']=data['rmag_PS1']-data['W1mag_AllWISE']
         data['M_r']=data['rmag_PS1']+5*np.log10(1e-3*data['PLX_GaiaDR2'])+5
+        data['r-W1']=data['rmag_PS1']-data['W1mag_AllWISE']
+        data['i-K']=data['imag_PS1']-data['Ksmag_2MASS']
+        data['g-W1']=data['gmag_PS1']-data['W1mag_AllWISE']
+        data['M_W1']=data['W1mag_AllWISE']+5*np.log10(1e-3*data['PLX_GaiaDR2'])+5
 
         #mean and standard deviation of the training subset used to normalzie the data
-        y_mean=-0.06339634364228897
-        y_std=0.27671029005449393
+        y_mean=-0.02778879031644286
+        y_std=0.27765320864865234
         std_norm=0.125
 
-        regr_columns=['M_g', 'M_H_2MASS', 'M_W1', 'g-y', 'g-W2', 'r-W2']
-        ss_color='r-W1'
-        ss_mag='M_r'
+        regr_columns=['M_r', 'r-W1', 'i-K']
+        ss_color='g-W1'
+        ss_mag='M_W1'
     elif regr_type=='K':
         #create the colors and absolute magntiudes needed for the regression and single star cuts
-        data['M_z']=data['zmag_PS1']+5*np.log10(1e-3*data['PLX_GaiaDR2'])+5
-        data['g-J']=data['gmag_PS1']-data['Jmag_2MASS']
-        data['z-y']=data['zmag_PS1']-data['ymag_PS1']
+        data['M_g']=data['gmag_PS1']+5*np.log10(1e-3*data['PLX_GaiaDR2'])+5
+        data['g-y']=data['gmag_PS1']-data['ymag_PS1']
         data['y-W2']=data['ymag_PS1']-data['W2mag_AllWISE']
+        data['J-W2']=data['Jmag_2MASS']-data['W2mag_AllWISE']
         data['W1-W2']=data['W1mag_AllWISE']-data['W2mag_AllWISE']
-        data['M_W2']=data['W2mag_AllWISE']+5*np.log10(1e-3*data['PLX_GaiaDR2'])+5
-        data['g-H']=data['gmag_PS1']-data['Hmag_2MASS']
+        data['M_K']=data['Ksmag_2MASS']+5*np.log10(1e-3*data['PLX_GaiaDR2'])+5
+        data['g-W1']=data['gmag_PS1']-data['W1mag_AllWISE']
 
         #mean and standard deviation of the training subset used to normalzie the data
-        y_mean=-0.061195682830781147
-        y_std=0.28095342168889686
+        y_mean=-0.07309052889859481
+        y_std=0.30552923628469836
         std_norm=0.05
 
-        regr_columns=['M_z', 'g-J', 'z-y', 'y-W2', 'W1-W2']
-        ss_color='g-H'
-        ss_mag='M_W2'
+        regr_columns=['M_g', 'g-y', 'y-W2', 'J-W2', 'W1-W2']
+        ss_color='g-W1'
+        ss_mag='M_K'
     else:
         print("Incorrect Regressor Type!")
         return 0,0
@@ -101,12 +98,8 @@ def estimate_metals_gpr(data,regr_file,ss_cuts_file,regr_type):
         
         M_H[evl & ((dist>ss_cuts[1][0][i][0]) | (dist<ss_cuts[1][0][i][1]) | (data[ss_color]<ss_cuts[2][0][i]) | (data[ss_color]>ss_cuts[3][0][i]))]=99.
         
-        if i==0 and regr_type=='M':
-            dist=1.797*data[ss_color]+3.859-np.array(data[ss_mag])
-            M_H[(M_H<=-0.8) & ((dist>0))]=99.
 
-        if i==0 and regr_type=='K':
-            M_H[(M_H<=-0.8) & ((dist>0)| (data[ss_color]<ss_cuts[2][0][i]) | (data[ss_color]>ss_cuts[3][0][i]))]=99.
+    M_H[(M_H<=-0.8) & ((dist>0)| (data[ss_color]<ss_cuts[2][0][i]) | (data[ss_color]>ss_cuts[3][0][i]))]=99.
 
     M_H_std[M_H==99.]=99.
 
