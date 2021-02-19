@@ -20,7 +20,7 @@ def estimate_metals_gpr(data, regr_file, ss_cuts_file, regr_type):
         data: (Pandas Dataframe)
             data in the form of a Pandas Dataframe. The columns in this
             dataframe must match the column names from the cross match
-            by Medan, Lepine and Hartman (2021).
+            data provided in this repository.
         regr_file: (str)
             The file name that stores the sklearn Gaussian Process
             Regressor for a particular temperature regime
