@@ -8,7 +8,7 @@ and the 2850 < T < 3500 K sample resulted in a 1-sigma scatter of 0.21 dex:
 
 ![](M_regression_results.png)
 
-This reprository will provide the resuting Gaussian Process Regressors, photometric cuts for removing possible unresolved binaries and example code that demonstrates how these can be used to estimate metallicities and the confidence on these estimates. It should be noted that systemtic errors are present in the results from the 2850 < T < 3500 K regressor (see Medan, Lepine and Hartman 2021), and this relationship should be used with such issues in mind.
+This repository will provide the resuting Gaussian Process Regressors, photometric cuts for removing possible unresolved binaries and example code that demonstrates how these can be used to estimate metallicities and the confidence on these estimates. As a note, this code is written to specifically use the resulting cross-match data from Medan, Lepine and Hartman (2021). It should be noted that systemtic errors are present in the results from the 2850 < T < 3500 K regressor (see Medan, Lepine and Hartman 2021), and this relationship should be used with such issues in mind.
 
 # Acknowledgements
 
