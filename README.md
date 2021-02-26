@@ -15,3 +15,11 @@ This repository will provide the resuting Gaussian Process Regressors, photometr
 When using this regressor for your work, we please ask that you cite our study that discusses the calibration in greater detail: [Medan, Lepine and Hartman (2021)](https://arxiv.org/abs/2102.10210)
 
 This work has made great use of Python libraries, in particular [*scikit-learn*](https://scikit-learn.org/stable/modules/generated/sklearn.gaussian_process.GaussianProcessRegressor.html). Additionally, this work has made use of many astronomical datasets, including [*Gaia*](https://www.cosmos.esa.int/web/gaia/dr2), [2MASS](https://irsa.ipac.caltech.edu/Missions/2mass.html), [AllWISE](http://wise2.ipac.caltech.edu/docs/release/allwise/), [Pan-STARRS](https://panstarrs.stsci.edu) and [APOGEE](https://www.sdss.org/surveys/apogee-2/).
+
+# Installation
+
+To download this code onto your machine, simply run:
+
+	pip install git+https://github.com/imedan/gpr_metallicity_relationship.git
+
+Note that you will have to additionally download the four .pkl files in this repository that contain the regressors and single-star cuts in order to estimate metallicities with the resulting functions.
