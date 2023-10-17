@@ -90,8 +90,11 @@ def estimate_metals_gpr(data, regr_file, ss_cuts_file, regr_type):
     # estimate metallicity and confidence on estimates
     M_H = np.zeros(len(data)) + 99.
     M_H_std = np.zeros(len(data)) + 99.
-    for i in range(0, round(len(data) / 10000) * 10000, 10000):
-        M_H[i:i + 10000], M_H_std[i:i + 10000] = regr.predict(data[regr_columns][i:i + 10000], return_std=True)
+    if len(data) > 10000:
+        for i in range(0, round(len(data) / 10000) * 10000, 10000):
+            M_H[i:i + 10000], M_H_std[i:i + 10000] = regr.predict(data[regr_columns][i:i + 10000], return_std=True)
+    else:
+        M_H, M_H_std = regr.predict(data[regr_columns], return_std=True)
 
     M_H = M_H * y_std + y_mean
     M_H_std = (M_H_std + std_norm / y_std) * y_std
