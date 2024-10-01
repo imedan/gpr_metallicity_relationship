@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 
 
-def estimate_metals_gpr(data, regr_file, ss_cuts_file, regr_type):
+def estimate_metals_gpr(data, regr_file, ss_cuts_file, regr_type, return_bin_flag=False):
     '''
         This predicts the average metallicity, [M/H], forstars in
         two temperature regimes; regr_type 'K' (3500 < T < 5280 K)
@@ -32,6 +32,10 @@ def estimate_metals_gpr(data, regr_file, ss_cuts_file, regr_type):
             Specifying which temperature regime this regressor
             covers, where regr_type 'K' (3500 < T < 5280 K)
             and regr_type 'M' (2850 < T < 3500 K)
+
+        return_bin_flag: (bool)
+            Whether to return flag and Fe/h estimate (true) or just remove
+            if flagged binary (False).
 
         Returns
         -------
@@ -109,6 +113,8 @@ def estimate_metals_gpr(data, regr_file, ss_cuts_file, regr_type):
 
     # remove stars that don't pass single star cuts
     mhs = np.arange(-0.8, 0.6, 0.1)
+    if return_bin_flag:
+        binary_flag = np.zeros(len(M_H), dtype=bool)
 
     for i in range(len(mhs) - 1):
         evl = eval("(M_H > mhs[i]) & (M_H <= mhs[i+1])")
@@ -117,10 +123,19 @@ def estimate_metals_gpr(data, regr_file, ss_cuts_file, regr_type):
 
         dist = p(data[ss_color]) - np.array(data[ss_mag])
 
-        M_H[evl & ((dist > ss_cuts[1][0][i][0]) | (dist < ss_cuts[1][0][i][1]) | (data[ss_color] < ss_cuts[2][0][i]) | (data[ss_color] > ss_cuts[3][0][i]))] = 99.
+        if return_bin_flag:
+            binary_flag[evl & ((dist > ss_cuts[1][0][i][0]) | (dist < ss_cuts[1][0][i][1]) | (data[ss_color] < ss_cuts[2][0][i]) | (data[ss_color] > ss_cuts[3][0][i]))] = True
+        else:
+            M_H[evl & ((dist > ss_cuts[1][0][i][0]) | (dist < ss_cuts[1][0][i][1]) | (data[ss_color] < ss_cuts[2][0][i]) | (data[ss_color] > ss_cuts[3][0][i]))] = 99.
 
-    M_H[(M_H <= -0.8) & ((dist > 0) | (data[ss_color] < ss_cuts[2][0][i]) | (data[ss_color] > ss_cuts[3][0][i]))] = 99.
+    if return_bin_flag:
+        binary_flag[(M_H <= -0.8) & ((dist > 0) | (data[ss_color] < ss_cuts[2][0][i]) | (data[ss_color] > ss_cuts[3][0][i]))] = True
+    else:
+        M_H[(M_H <= -0.8) & ((dist > 0) | (data[ss_color] < ss_cuts[2][0][i]) | (data[ss_color] > ss_cuts[3][0][i]))] = 99.
 
     M_H_std[M_H == 99.] = 99.
 
-    return M_H, M_H_std
+    if return_bin_flag:
+        return M_H, M_H_std, binary_flag
+    else:
+        return M_H, M_H_std
